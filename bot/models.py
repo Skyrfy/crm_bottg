@@ -32,3 +32,89 @@ class Student(models.Model):
     def __str__(self):
         group_label = self.get_group_display() if self.group else 'не распределён'
         return f'{self.full_name} ({group_label})'
+
+    # Минимальный duck-typing под Django auth — чтобы DRF мог считать студента "пользователем"
+    @property
+    def is_authenticated(self):
+        return True
+
+    @property
+    def is_anonymous(self):
+        return False
+
+
+class Deadline(models.Model):
+    """Задание с дедлайном. Может быть выдано одному или нескольким ученикам."""
+
+    topic = models.CharField(max_length=200, verbose_name='Тема')
+    description = models.TextField(blank=True, verbose_name='Описание')
+    due_at = models.DateTimeField(verbose_name='Срок сдачи')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Дедлайн'
+        verbose_name_plural = 'Дедлайны'
+        ordering = ['-due_at']
+
+    def __str__(self):
+        return f'{self.topic} (до {self.due_at:%d.%m.%Y %H:%M})'
+
+
+class DeadlineAssignment(models.Model):
+    """Связка дедлайна с конкретным учеником. У каждого ученика свой статус."""
+
+    STATUS_CHOICES = [
+        ('pending', 'Ожидает выполнения'),
+        ('submitted', 'Отправлен на проверку'),
+        ('approved', 'Принят'),
+        ('rejected', 'Отклонён, нужна доработка'),
+        ('overdue', 'Просрочен'),
+    ]
+
+    deadline = models.ForeignKey(
+        Deadline, related_name='assignments', on_delete=models.CASCADE
+    )
+    student = models.ForeignKey(
+        Student, related_name='assignments', on_delete=models.CASCADE
+    )
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    overdue_notified = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Назначение дедлайна'
+        verbose_name_plural = 'Назначения дедлайнов'
+        unique_together = ('deadline', 'student')
+
+    def __str__(self):
+        return f'{self.student.full_name} — {self.deadline.topic} [{self.get_status_display()}]'
+
+
+class Submission(models.Model):
+    """Ответ ученика на дедлайн. У одного assignment может быть несколько ответов (история доработок)."""
+
+    CONTENT_TYPE_CHOICES = [
+        ('text', 'Текст'),
+        ('document', 'Документ'),
+        ('photo', 'Фото'),
+    ]
+
+    assignment = models.ForeignKey(
+        DeadlineAssignment, related_name='submissions', on_delete=models.CASCADE
+    )
+    text = models.TextField(blank=True)
+    file_id = models.CharField(max_length=255, blank=True, verbose_name='Telegram file_id')
+    file_name = models.CharField(max_length=255, blank=True)
+    content_type = models.CharField(
+        max_length=20, choices=CONTENT_TYPE_CHOICES, default='text'
+    )
+    mentor_comment = models.TextField(blank=True, verbose_name='Комментарий ментора (при reject)')
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Ответ на дедлайн'
+        verbose_name_plural = 'Ответы на дедлайны'
+        ordering = ['-submitted_at']
+
+    def __str__(self):
+        return f'{self.assignment.student.full_name} — {self.submitted_at:%d.%m %H:%M}'
