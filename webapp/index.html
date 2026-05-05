@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM Mentor</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div id="root">
+        <div class="card">
+            <div class="spinner"></div>
+            <span style="margin-left: 8px;">Загрузка...</span>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initTelegram } from '/js/tg.js';
+        import { api } from '/js/api.js';
+
+        const root = document.getElementById('root');
+
+        initTelegram();
+
+        try {
+            const me = await api.me();
+            // Редирект на нужный кабинет в зависимости от роли
+            if (me.role === 'mentor') {
+                window.location.replace('/mentor/');
+            } else {
+                window.location.replace('/student/');
+            }
+        } catch (err) {
+            root.innerHTML = `
+                <div class="error">
+                    <strong>Не удалось войти.</strong><br>
+                    ${err.message}
+                </div>
+                <p class="hint">
+                    Если вы ученик — сначала напишите боту /start, чтобы зарегистрироваться.
+                </p>
+            `;
+        }
+    </script>
+</body>
+</html>

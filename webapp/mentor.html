@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кабинет ментора</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <h1>Кабинет ментора</h1>
+    <p class="hint" id="greeting"></p>
+
+    <div id="content">
+        <div class="card">
+            <div class="spinner"></div>
+            <span style="margin-left: 8px;">Загрузка дедлайнов...</span>
+        </div>
+    </div>
+
+    <button class="btn btn-block" id="new-deadline-btn" disabled>
+        ➕ Новый дедлайн
+    </button>
+
+    <script type="module" src="/js/mentor.js"></script>
+</body>
+</html>

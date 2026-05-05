@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+WEBAPP_DIR = BASE_DIR / 'webapp'
 
 # Загружаем переменные окружения из .env (лежит рядом с manage.py)
 load_dotenv(BASE_DIR / '.env')
@@ -52,7 +53,7 @@ ROOT_URLCONF = 'mentor_crm.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [WEBAPP_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
