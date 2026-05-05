@@ -8,19 +8,51 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-    <h1>Кабинет ментора</h1>
-    <p class="hint" id="greeting"></p>
+    <div id="screen-list">
+        <h1>Кабинет ментора</h1>
+        <p class="hint" id="greeting"></p>
 
-    <div id="content">
-        <div class="card">
-            <div class="spinner"></div>
-            <span style="margin-left: 8px;">Загрузка дедлайнов...</span>
+        <div id="content">
+            <div class="card">
+                <div class="spinner"></div>
+                <span style="margin-left: 8px;">Загрузка дедлайнов...</span>
+            </div>
         </div>
+
+        <button class="btn btn-block" id="new-deadline-btn">➕ Новый дедлайн</button>
     </div>
 
-    <button class="btn btn-block" id="new-deadline-btn" disabled>
-        ➕ Новый дедлайн
-    </button>
+    <div id="screen-create" style="display: none;">
+        <h1>Новый дедлайн</h1>
+
+        <div class="card">
+            <label for="topic"><strong>Тема</strong></label>
+            <input type="text" id="topic" class="input" placeholder="Например: Декораторы">
+        </div>
+
+        <div class="card">
+            <label for="description"><strong>Описание</strong> <span class="hint">(необязательно)</span></label>
+            <textarea id="description" class="input" rows="4" placeholder="Что нужно сделать..."></textarea>
+        </div>
+
+        <div class="card">
+            <label for="due_at"><strong>Срок сдачи</strong></label>
+            <input type="datetime-local" id="due_at" class="input">
+        </div>
+
+        <div class="card">
+            <strong>Кому отправить</strong>
+            <div class="hint" style="margin-bottom: 8px;">Выберите одного или нескольких учеников</div>
+            <div id="students-list">
+                <div class="muted">Загрузка списка...</div>
+            </div>
+        </div>
+
+        <div id="create-error"></div>
+
+        <button class="btn btn-block" id="submit-create">Создать дедлайн</button>
+        <button class="btn btn-block btn-secondary" id="cancel-create">Отмена</button>
+    </div>
 
     <script type="module" src="/js/mentor.js"></script>
 </body>

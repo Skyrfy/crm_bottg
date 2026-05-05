@@ -82,3 +82,62 @@ h2 { font-size: 18px; }
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+
+.input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--tg-theme-hint-color, #ccc);
+    background: var(--tg-theme-bg-color, #fff);
+    color: var(--tg-theme-text-color, #000);
+    font-size: 16px;
+    font-family: inherit;
+    margin-top: 6px;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--tg-theme-button-color, #2481cc);
+}
+
+.btn-secondary {
+    background: var(--tg-theme-secondary-bg-color, #f4f4f5);
+    color: var(--tg-theme-text-color, #000);
+}
+
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--tg-theme-secondary-bg-color, #eee);
+}
+
+.checkbox-row:last-child {
+    border-bottom: none;
+}
+
+.checkbox-row input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+}
+
+.checkbox-row label {
+    flex: 1;
+    cursor: pointer;
+}
+
+.group-tag {
+    display: inline-block;
+    font-size: 12px;
+    background: var(--tg-theme-button-color, #2481cc);
+    color: var(--tg-theme-button-text-color, #fff);
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 8px;
+}
+
+.group-tag.muted {
+    background: var(--tg-theme-hint-color, #ccc);
+    color: var(--tg-theme-bg-color, #fff);
+}
