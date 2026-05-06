@@ -91,7 +91,12 @@ class DeadlineAssignment(models.Model):
 
 
 class Submission(models.Model):
-    """Ответ ученика на дедлайн. У одного assignment может быть несколько ответов (история доработок)."""
+    """Сообщение в треде дедлайна. Может быть от ученика (ответ) или от ментора (комментарий)."""
+
+    AUTHOR_CHOICES = [
+        ('student', 'Ученик'),
+        ('mentor', 'Ментор'),
+    ]
 
     CONTENT_TYPE_CHOICES = [
         ('text', 'Текст'),
@@ -102,19 +107,23 @@ class Submission(models.Model):
     assignment = models.ForeignKey(
         DeadlineAssignment, related_name='submissions', on_delete=models.CASCADE
     )
+    author = models.CharField(
+        max_length=10, choices=AUTHOR_CHOICES, default='student',
+        verbose_name='Автор сообщения',
+    )
     text = models.TextField(blank=True)
     file_id = models.CharField(max_length=255, blank=True, verbose_name='Telegram file_id')
     file_name = models.CharField(max_length=255, blank=True)
     content_type = models.CharField(
         max_length=20, choices=CONTENT_TYPE_CHOICES, default='text'
     )
-    mentor_comment = models.TextField(blank=True, verbose_name='Комментарий ментора (при reject)')
+    mentor_comment = models.TextField(blank=True, verbose_name='Комментарий ментора (legacy, при reject)')
     submitted_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = 'Ответ на дедлайн'
-        verbose_name_plural = 'Ответы на дедлайны'
-        ordering = ['-submitted_at']
+        verbose_name = 'Сообщение в треде'
+        verbose_name_plural = 'Сообщения в тредах'
+        ordering = ['submitted_at']  # хронологический порядок ленты
 
     def __str__(self):
-        return f'{self.assignment.student.full_name} — {self.submitted_at:%d.%m %H:%M}'
+        return f'{self.get_author_display()} · {self.assignment.student.full_name} · {self.submitted_at:%d.%m %H:%M}'

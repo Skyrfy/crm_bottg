@@ -2,6 +2,7 @@ import asyncio
 import logging
 import os
 
+from bot.scheduler import get_scheduler, restore_jobs_from_db
 from aiogram import Bot, Dispatcher, F
 from aiogram.filters import Command as CommandFilter
 from aiogram.fsm.context import FSMContext
@@ -398,8 +399,27 @@ async def run_bot():
     dp = Dispatcher(storage=MemoryStorage())
     register_handlers(dp)
 
+    from bot.scheduler import get_scheduler, restore_jobs_from_db, sync_jobs_with_db
+    from apscheduler.triggers.interval import IntervalTrigger
+
+    scheduler = get_scheduler()
+    scheduler.start()
+    await restore_jobs_from_db(MENTOR_TELEGRAM_ID)
+
+    # Каждую минуту сканируем БД на новые дедлайны
+    scheduler.add_job(
+        sync_jobs_with_db,
+        trigger=IntervalTrigger(minutes=1),
+        args=[MENTOR_TELEGRAM_ID],
+        id='sync_jobs',
+        replace_existing=True,
+    )
+
     logger.info('Бот запущен (long polling)')
-    await dp.start_polling(bot)
+    try:
+        await dp.start_polling(bot)
+    finally:
+        scheduler.shutdown(wait=False)
 
 
 class Command(BaseCommand):

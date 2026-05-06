@@ -11,31 +11,39 @@ class StudentSerializer(serializers.ModelSerializer):
 
 
 class SubmissionSerializer(serializers.ModelSerializer):
+    author_label = serializers.CharField(source='get_author_display', read_only=True)
+    author_name = serializers.SerializerMethodField()
+
     class Meta:
         model = Submission
-        fields = (
-            'id', 'text', 'file_id', 'file_name', 'content_type',
-            'mentor_comment', 'submitted_at',
-        )
-        read_only_fields = ('submitted_at',)
+        fields = ('id', 'author', 'author_label', 'author_name', 'text', 'submitted_at')
+        read_only_fields = ('submitted_at', 'author', 'author_label', 'author_name')
+
+    def get_author_name(self, obj):
+        if obj.author == 'mentor':
+            return 'Ментор'
+        return obj.assignment.student.full_name
+
+    def validate_text(self, value):
+        value = (value or '').strip()
+        if not value:
+            raise serializers.ValidationError('Сообщение не может быть пустым.')
+        if len(value) > 4000:
+            raise serializers.ValidationError('Сообщение слишком длинное (максимум 4000 символов).')
+        return value
 
 
 class DeadlineAssignmentSerializer(serializers.ModelSerializer):
     student = StudentSerializer(read_only=True)
     submissions = SubmissionSerializer(many=True, read_only=True)
     status_label = serializers.CharField(source='get_status_display', read_only=True)
-    last_submission = serializers.SerializerMethodField()
 
     class Meta:
         model = DeadlineAssignment
         fields = (
             'id', 'student', 'status', 'status_label',
-            'submissions', 'last_submission', 'created_at',
+            'submissions', 'created_at',
         )
-
-    def get_last_submission(self, obj):
-        last = obj.submissions.first()  # ordering = ['-submitted_at']
-        return SubmissionSerializer(last).data if last else None
 
 
 class DeadlineListSerializer(serializers.ModelSerializer):

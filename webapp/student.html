@@ -8,13 +8,29 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-    <h1>Мои дедлайны</h1>
-    <p class="hint" id="greeting"></p>
+    <div id="screen-list">
+        <h1>Мои дедлайны</h1>
+        <p class="hint" id="greeting"></p>
 
-    <div id="content">
-        <div class="card">
-            <div class="spinner"></div>
-            <span style="margin-left: 8px;">Загрузка...</span>
+        <div id="content">
+            <div class="card">
+                <div class="spinner"></div>
+                <span style="margin-left: 8px;">Загрузка...</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="screen-detail" style="display: none;">
+        <button class="btn btn-secondary" id="back-btn" style="margin-bottom: 12px;">← Назад</button>
+
+        <div id="detail-content"></div>
+
+        <div id="submit-form" style="display: none;">
+            <h2>Отправить ответ</h2>
+            <p class="hint">Напишите свой ответ или вставьте ссылку на gist/github.</p>
+            <textarea id="answer-text" class="input" rows="8" placeholder="Ваш ответ..."></textarea>
+            <div id="submit-error"></div>
+            <button class="btn btn-block" id="send-answer-btn">Отправить ответ</button>
         </div>
     </div>
 

@@ -32,3 +32,7 @@ export function showAlert(message) {
 export function closeApp() {
     tg?.close();
 }
+
+export function getStartParam() {
+    return tg?.initDataUnsafe?.start_param || '';
+}

@@ -141,3 +141,91 @@ h2 { font-size: 18px; }
     background: var(--tg-theme-hint-color, #ccc);
     color: var(--tg-theme-bg-color, #fff);
 }
+
+/* Лента сообщений */
+.thread {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 12px 0;
+}
+
+.message {
+    max-width: 85%;
+    padding: 10px 12px;
+    border-radius: 12px;
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+.message-student {
+    align-self: flex-start;
+    background: var(--tg-theme-secondary-bg-color, #f0f0f0);
+    color: var(--tg-theme-text-color, #000);
+    border-bottom-left-radius: 4px;
+}
+
+.message-mentor {
+    align-self: flex-end;
+    background: var(--tg-theme-button-color, #2481cc);
+    color: var(--tg-theme-button-text-color, #fff);
+    border-bottom-right-radius: 4px;
+}
+
+.message-meta {
+    font-size: 11px;
+    opacity: 0.7;
+    margin-bottom: 4px;
+}
+
+.message-text {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.thread-empty {
+    text-align: center;
+    padding: 20px;
+    color: var(--tg-theme-hint-color, #707579);
+    font-size: 14px;
+}
+
+.compose {
+    margin-top: 12px;
+    padding: 12px;
+    background: var(--tg-theme-secondary-bg-color, #f0f0f0);
+    border-radius: 12px;
+}
+
+.compose textarea {
+    width: 100%;
+    min-height: 60px;
+    border: 1px solid var(--tg-theme-hint-color, #ccc);
+    background: var(--tg-theme-bg-color, #fff);
+    color: var(--tg-theme-text-color, #000);
+    border-radius: 8px;
+    padding: 8px;
+    font-family: inherit;
+    font-size: 15px;
+    resize: vertical;
+}
+
+.compose-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.compose-actions .btn {
+    flex: 1;
+}
+
+.review-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.review-actions .btn {
+    flex: 1;
+}

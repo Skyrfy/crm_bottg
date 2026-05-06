@@ -50,4 +50,8 @@ export const api = {
         method: 'POST',
         body: JSON.stringify({ comment }),
     }),
+    comment: (assignmentId, text) => request(`/assignments/${assignmentId}/comment/`, {
+    method: 'POST',
+    body: JSON.stringify({ text }),
+    }),
 };
