@@ -4,3 +4,6 @@ __pycache__/
 db.sqlite3
 .vscode/
 venv/
+node_modules/
+interview_frontend_src/node_modules/
+interview_frontend_src/dist/
